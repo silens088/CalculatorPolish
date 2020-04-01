@@ -29,7 +29,7 @@ public class Calculator {
             }
             if (priority == -1) {
                 current+=' ';
-                while (getP(stack.peek()) !=1) {  //пока приоритет верхнего элемента стека не равен 1:
+                while (getP(stack.peek()) != 1) {  //пока приоритет верхнего элемента стека не равен 1:
                     current+=stack.pop();
                 }
                 stack.pop(); //pop() - Возвращает элемент, находящийся в верхней части стэка, удаляя его в процессе.
@@ -47,22 +47,30 @@ public class Calculator {
         Stack<Double> stack = new Stack<Double>();
 
         for(int i = 0; i < rpn.length(); i++) {
-            if (rpn.charAt(i) == ' ') {  //если пробел, то запускаем заново
-                continue;
-            }
+            if (rpn.charAt(i) == ' ') continue; //если пробел, то запускаем заново
+
             if (getP(rpn.charAt(i)) == 0) { //если попался символ(число), то засовываем всё число в операнд.
-                while ( rpn.charAt(i) !=' ' && getP(rpn.charAt(i)) == 0) {
+                while (rpn.charAt(i) != ' ' && getP(rpn.charAt(i)) == 0)
                     operand+=rpn.charAt(i++);
-                }
-                if(i == rpn.length()) {
-                    break;
-                }
+                if(i == rpn.length()) break;
+
                 stack.push(Double.parseDouble(operand)); //преобразует String в Double
-                operand = new String(); //снова инициализируем операнд, преобразуя в строку
+                operand = new String(); //снова инициализируем операнд, преобразуя в строку`
+            }
+
+//            Object pop()
+//            Возвращает элемент, находящийся в верхней части стэка, удаляя его в процессе.
+
+            if(getP(rpn.charAt(i)) > 1) { //если приоритет это мат символ, то:
+                double a = stack.pop(), b = stack.pop(); //забрали два верхних числа
+
+                if(rpn.charAt(i) == '+') stack.push(b + a);
+                if(rpn.charAt(i) == '-') stack.push(b - a);
+                if(rpn.charAt(i) == '*') stack.push(b * a);
+                if(rpn.charAt(i) == '/') stack.push(b / a);
             }
         }
-
-        return 0;
+        return stack.pop();
     }
 
     //метод определяющий приоритет
