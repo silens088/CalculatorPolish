@@ -3,20 +3,31 @@ import java.util.Stack;
 public class Calculator {
 
     public static void main(String[] args) {
-        String expression = "2+2*2";
+        String expression = "-2+2*2";
         System.out.println(new Calculator().decide(expression));
     }
 
+    //получить решение
     public double decide(String expression) {
-        String rpn = ExpressionToRPN(expression);
+        String prepared = preparingExpression(expression);
+        String rpn = ExpressionToRPN(prepared);
         return rpnToAnswer(rpn);
     }
 
+    //метод распознает отрицательные выражения
     private String preparingExpression(String expression) {
         String preparedExpression = new String();
 
         for (int token = 0; token < expression.length(); token++) {
             char symbol = expression.charAt(token);
+            if (symbol == '-') {
+                if (token == 0) {
+                    preparedExpression += '0';
+                } else if (expression.charAt(token-1) == '(') {
+                    preparedExpression += '0';
+                }
+            }
+            preparedExpression+=symbol;
         }
         return preparedExpression;
     }
